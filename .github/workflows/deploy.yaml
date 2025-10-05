@@ -1,0 +1,114 @@
+# This is a GitHub Actions workflow file that defines the continuous integration
+# and continuous deployment (CI/CD) process for a Next.js application.
+# It automates the process of building and deploying the application to a
+# DigitalOcean droplet when code is pushed to the 'main' branch.
+
+name: Deploy Next.js App to DigitalOcean
+
+# This section defines the trigger for the workflow.
+# The 'on' keyword specifies that this workflow will run on a 'push' event.
+# The 'branches' filter ensures it only runs for pushes to the 'main' branch.
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  # The 'deploy' job encapsulates all the steps required to build and deploy the app.
+  deploy:
+    environment: production
+    # This specifies that the job will run on the latest version of a GitHub-hosted Ubuntu runner.
+    runs-on: ubuntu-latest
+
+    # This section defines the sequence of steps that the job will execute.
+    steps:
+      # Step 1: Check out the repository's code.
+      # This action downloads a copy of your repository onto the runner,
+      # making your source code available for the subsequent steps.
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up pnpm.
+      # This action installs pnpm and makes it available to the workflow.
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8 # Or your desired pnpm version
+
+      # Step 3: Set up the Node.js environment.
+      # This action installs a specific version of Node.js on the runner.
+      # It's configured to use pnpm for caching, which is more efficient.
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "22.x"
+          cache: "pnpm" # Cache dependencies managed by pnpm.
+
+      # Step 4: Install project dependencies with pnpm.
+      # This command reads the 'package.json' and 'pnpm-lock.yaml' files
+      # and installs all the necessary packages for your application.
+      - name: Install dependencies
+        run: pnpm install
+
+      # Step 5: Build the Next.js application.
+      # This command runs the 'build' script defined in your 'package.json'.
+      # It compiles your Next.js application for production.
+      # The 'env' section injects your production environment variables,
+      # which are stored securely as GitHub Secrets.
+      - name: Build application
+        run: pnpm run build
+        env:
+          NEXT_PUBLIC_UPLOADTHING_URL: ${{ secrets.NEXT_PUBLIC_UPLOADTHING_URL }}
+
+      # This redundant step has been removed for a cleaner workflow.
+      # The file syncing is handled by the next step.
+
+      # Step 6: Prepare deployment package
+      # This step creates a clean directory with the exact file structure
+      # needed for production. This avoids rsync issues with multiple sources.
+      - name: Prepare deployment package
+        run: |
+          mkdir -p deploy
+          cp -R .next deploy/
+          cp -R public deploy/
+          cp package.json deploy/
+          cp pnpm-lock.yaml deploy/
+          cp next.config.ts deploy/
+          cp middleware.ts deploy/
+        env:
+          # Mask sensitive information in logs
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Step 7: Sync files to server
+      - name: Sync files to server
+        uses: easingthemes/ssh-deploy@main
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          ARGS: "-rltgoDzqO --delete"
+          # Sync the entire contents of the prepared 'deploy' directory.
+          SOURCE: "deploy/"
+          REMOTE_HOST: ${{ secrets.DROPLET_HOST }}
+          REMOTE_USER: ${{ secrets.DROPLET_USERNAME }}
+          TARGET: ~/gems-of-india # The destination directory on your server.
+          EXCLUDE: ".env.production"
+
+      # Step 7: Install production dependencies and restart the application with PM2.
+      # This step executes commands on your server after the files have been transferred.
+      - name: Restart PM2 Application
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.DROPLET_HOST }}
+          username: ${{ secrets.DROPLET_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            # Navigate to your application's directory on the server.
+            cd ~/gems-of-india
+
+            # Install only production dependencies using pnpm.
+            # Suppress verbose output to avoid exposing sensitive information
+            pnpm install --prod --silent
+
+            # Restart the application using PM2.
+            # 'pm2 reload' provides a zero-downtime restart.
+            pm2 reload nextjs-app --silent
