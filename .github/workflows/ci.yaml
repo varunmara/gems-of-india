@@ -1,0 +1,63 @@
+# This is a GitHub Actions workflow file that defines the continuous integration (CI) process.
+# It automates the process of linting and building the application.
+
+name: CI
+
+# This section defines the trigger for the workflow.
+# It runs on pushes to the 'main' branch and on pull requests targeting 'main'.
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  # The 'build' job encapsulates all the steps required to build and lint the app.
+  build:
+    # This specifies that the job will run on the latest version of a GitHub-hosted Ubuntu runner.
+    runs-on: ubuntu-latest
+
+    # This section defines the sequence of steps that the job will execute.
+    steps:
+      # Step 1: Check out the repository's code.
+      # This action downloads a copy of your repository onto the runner,
+      # making your source code available for the subsequent steps.
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up pnpm.
+      # This action installs pnpm and makes it available to the workflow.
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 10 # Or your desired pnpm version
+
+      # Step 3: Set up the Node.js environment.
+      # This action installs a specific version of Node.js on the runner.
+      # It's configured to use pnpm for caching, which is more efficient.
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "22.x"
+          cache: "pnpm" # Cache dependencies managed by pnpm.
+
+      # Step 4: Install project dependencies with pnpm.
+      # This command reads the 'package.json' and 'pnpm-lock.yaml' files
+      # and installs all the necessary packages for your application.
+      - name: Install dependencies
+        run: pnpm install
+
+      # Step 5: Lint the code.
+      # This command runs the 'lint' script defined in your 'package.json'.
+      - name: Lint code
+        run: pnpm run lint
+
+      # Step 6: Build the Next.js application.
+      # This command runs the 'build' script defined in your 'package.json'.
+      # It compiles your Next.js application for production and runs type checks.
+      - name: Build application
+        run: pnpm run build
+        env:
+          NEXT_PUBLIC_UPLOADTHING_URL: ${{ secrets.NEXT_PUBLIC_UPLOADTHING_URL }}

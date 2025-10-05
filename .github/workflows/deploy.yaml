@@ -6,12 +6,10 @@
 name: Deploy Next.js App to DigitalOcean
 
 # This section defines the trigger for the workflow.
-# The 'on' keyword specifies that this workflow will run on a 'push' event.
-# The 'branches' filter ensures it only runs for pushes to the 'main' branch.
+# The 'on: workflow_dispatch' allows this workflow to be triggered manually
+# from the Actions tab in the GitHub repository.
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
   # The 'deploy' job encapsulates all the steps required to build and deploy the app.
