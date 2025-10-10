@@ -61,3 +61,16 @@ jobs:
         run: pnpm run build
         env:
           NEXT_PUBLIC_UPLOADTHING_URL: ${{ secrets.NEXT_PUBLIC_UPLOADTHING_URL }}
+          # Better Auth required environment variables for CI build
+          BETTER_AUTH_SECRET: "ci--secret-placeholder"
+          BETTER_AUTH_URL: "http://localhost:3000"
+          # Google OAuth (dummy values for CI)
+          GOOGLE_CLIENT_ID: "ci-google-client-id"
+          GOOGLE_CLIENT_SECRET: "ci-google-client-secret"
+          # Cloudflare Turnstile (dummy values for CI)
+          TURNSTILE_SECRET_KEY: "ci-turnstile-secret"
+          NEXT_PUBLIC_TURNSTILE_SITE_KEY: "ci-turnstile-site-key"
+          # Google One Tap (dummy values for CI)
+          NEXT_PUBLIC_ONE_TAP_CLIENT_ID: "ci-one-tap-client-id"
+          # Other required env vars
+          NEXT_PUBLIC_URL: "http://localhost:3000"
