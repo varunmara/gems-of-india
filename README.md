@@ -1,5 +1,9 @@
 # Gems of India 🇮🇳
 
+### Join Discord Server
+
+https://discord.gg/cVCYec2jFA
+
 **Gems of India** (https://gemsofindia.org) is a community-driven platform to rate and review government officials and politicians in India, from the village to the central level. The goal is to bring transparency, accountability, and awareness about those who serve the nation.
 
 This platform allows users to:
