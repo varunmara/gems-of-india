@@ -57,6 +57,7 @@ jobs:
         run: pnpm run build
         env:
           NEXT_PUBLIC_UPLOADTHING_URL: ${{ secrets.NEXT_PUBLIC_UPLOADTHING_URL }}
+          NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ secrets.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}
 
       # This redundant step has been removed for a cleaner workflow.
       # The file syncing is handled by the next step.
