@@ -58,6 +58,19 @@ jobs:
         env:
           NEXT_PUBLIC_UPLOADTHING_URL: ${{ secrets.NEXT_PUBLIC_UPLOADTHING_URL }}
           NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ secrets.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}
+          # Better Auth required environment variables
+          BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+          BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
+          # Google OAuth
+          NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          # Cloudflare Turnstile
+          TURNSTILE_SECRET_KEY: ${{ secrets.TURNSTILE_SECRET_KEY }}
+          # Google One Tap
+          NEXT_PUBLIC_ONE_TAP_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_ONE_TAP_CLIENT_ID }}
+          # Other required env vars
+          NEXT_PUBLIC_URL: ${{ secrets.NEXT_PUBLIC_URL }}
 
       # This redundant step has been removed for a cleaner workflow.
       # The file syncing is handled by the next step.
