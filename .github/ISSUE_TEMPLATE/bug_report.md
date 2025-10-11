@@ -10,7 +10,8 @@ assignees: ''
 **Describe the Bug**
 A clear and concise description of what the bug is.
 
-**Steps to Reproduce**
+## Steps to Reproduce
+
 1. Go to '...'
 2. Click on '...'
 3. Scroll down to '...'
@@ -22,7 +23,7 @@ A clear and concise description of what you expected to happen.
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
-**Environment**
+## Environment
 
 - OS: [e.g., Windows 10]
 - Browser: [e.g., Chrome 91]
