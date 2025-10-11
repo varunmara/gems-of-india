@@ -192,7 +192,7 @@ export function EntityInfoCard({ entity, reviewStats, className }: EntityInfoCar
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {/* Contact Information */}
             <div className="space-y-3">
-              <h3 className="text-foreground text-sm font-semibold">Contact Information</h3>
+              <h3 className="text-foreground text-sm font-semibold">Contact</h3>
 
               {entity.phoneNumber && (
                 <div className="flex items-center gap-2 text-sm">

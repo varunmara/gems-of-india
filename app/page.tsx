@@ -105,12 +105,12 @@ export default async function Home() {
                 </div>
               )}
 
-              {/* Categories */}
+              {/* Directory */}
               <div className="space-y-3 py-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="flex items-center gap-2 font-semibold">Top Categories</h3>
+                  <h3 className="flex items-center gap-2 font-semibold">Browse Directory</h3>
                   <Button variant="ghost" size="sm" className="text-sm" asChild>
-                    <Link href="/categories" className="flex items-center gap-1">
+                    <Link href="/directory" className="flex items-center gap-1">
                       View all
                     </Link>
                   </Button>

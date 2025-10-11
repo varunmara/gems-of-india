@@ -296,6 +296,16 @@ export const entity = pgTable(
     // Composite indexes for common query patterns
     statusCreatedIdx: index("entity_status_created_idx").on(table.status, table.createdAt),
     statusRankingIdx: index("entity_status_ranking_idx").on(table.status, table.dailyRanking),
+    // Directory page filtering indexes
+    entityTypeIdx: index("entity_type_idx").on(table.entityType),
+    stateIdx: index("entity_state_idx").on(table.state),
+    cityIdx: index("entity_city_idx").on(table.city),
+    nameIdx: index("entity_name_idx").on(table.name),
+    // Composite indexes for directory page filter combinations
+    statusEntityTypeIdx: index("entity_status_type_idx").on(table.status, table.entityType),
+    statusStateIdx: index("entity_status_state_idx").on(table.status, table.state),
+    statusCityIdx: index("entity_status_city_idx").on(table.status, table.city),
+    stateCityIdx: index("entity_state_city_idx").on(table.state, table.city),
   }),
 )
 

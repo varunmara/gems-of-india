@@ -392,9 +392,15 @@ export async function getEntitiesByCategory(
   page: number = 1,
   limit: number = 10,
   sort: string = "recent",
+  searchQuery: string = "",
+  stateFilter: string = "all",
+  cityFilter: string = "all",
+  entityTypeFilter: string = "all",
+  statusFilter: string = "all",
 ) {
   const session = await getSession()
   const userId = session?.user?.id || null
+  const isAdminOrModerator = session?.user?.role === "admin" || session?.user?.role === "moderator"
 
   let orderByClause
   switch (sort) {
@@ -412,10 +418,46 @@ export async function getEntitiesByCategory(
 
   const offset = (page - 1) * limit
 
-  const queryConditions = and(
-    eq(entityToCategory.categoryId, categoryId),
-    or(eq(entityTable.status, "published")),
-  )
+  // Build conditions
+  const conditions: SQL[] = []
+
+  // Category condition
+  if (categoryId !== "all") {
+    conditions.push(eq(entityToCategory.categoryId, categoryId))
+  }
+
+  // Status filter - only admins/moderators can see pending
+  if (isAdminOrModerator) {
+    if (statusFilter !== "all") {
+      conditions.push(eq(entityTable.status, statusFilter))
+    } else {
+      conditions.push(or(eq(entityTable.status, "published"), eq(entityTable.status, "pending"))!)
+    }
+  } else {
+    conditions.push(eq(entityTable.status, "published"))
+  }
+
+  // Search by name
+  if (searchQuery) {
+    conditions.push(ilike(entityTable.name, `%${searchQuery}%`))
+  }
+
+  // Filter by state
+  if (stateFilter !== "all") {
+    conditions.push(eq(entityTable.state, stateFilter))
+  }
+
+  // Filter by city
+  if (cityFilter !== "all") {
+    conditions.push(eq(entityTable.city, cityFilter))
+  }
+
+  // Filter by entity type
+  if (entityTypeFilter !== "all") {
+    conditions.push(eq(entityTable.entityType, entityTypeFilter))
+  }
+
+  const queryConditions = conditions.length > 0 ? and(...conditions) : undefined
 
   const entitiesData = await db
     .select({
@@ -434,7 +476,7 @@ export async function getEntitiesByCategory(
       reviewCount: sql<number>`cast(count(distinct ${reviews.id}) as int)`.mapWith(Number),
     })
     .from(entityTable)
-    .innerJoin(entityToCategory, eq(entityTable.id, entityToCategory.entityId))
+    .leftJoin(entityToCategory, eq(entityTable.id, entityToCategory.entityId))
     .leftJoin(upvote, eq(upvote.entityId, entityTable.id))
     .leftJoin(reviews, eq(reviews.entityId, entityTable.id))
     .where(queryConditions)
@@ -459,7 +501,7 @@ export async function getEntitiesByCategory(
   const totalEntitiesResult = await db
     .select({ count: count(entityTable.id) })
     .from(entityTable)
-    .innerJoin(entityToCategory, eq(entityTable.id, entityToCategory.entityId))
+    .leftJoin(entityToCategory, eq(entityTable.id, entityToCategory.entityId))
     .where(queryConditions)
 
   const totalCount = totalEntitiesResult[0]?.count || 0
@@ -849,5 +891,166 @@ export async function updateEntity(entityId: string, entityData: EntitySubmissio
   } catch (error) {
     console.error("Error updating entity:", error)
     return { success: false, error: "Failed to update entity" }
+  }
+}
+
+// Get entities for directory page
+export async function getEntitiesForDirectory(
+  page: number = 1,
+  limit: number = 10,
+  searchQuery: string = "",
+  stateFilter: string = "all",
+  cityFilter: string = "all",
+  entityTypeFilter: string = "all",
+  statusFilter: string = "all",
+  sort: string = "recent",
+) {
+  const session = await getSession()
+  const userId = session?.user?.id || null
+  const isAdminOrModerator = session?.user?.role === "admin" || session?.user?.role === "moderator"
+
+  const offset = (page - 1) * limit
+
+  // Build where conditions
+  const conditions: SQL[] = []
+
+  // Status filter - only admins/moderators can see pending
+  if (isAdminOrModerator) {
+    if (statusFilter !== "all") {
+      conditions.push(eq(entityTable.status, statusFilter))
+    } else {
+      conditions.push(or(eq(entityTable.status, "published"), eq(entityTable.status, "pending"))!)
+    }
+  } else {
+    conditions.push(eq(entityTable.status, "published"))
+  }
+
+  // Search by name
+  if (searchQuery) {
+    conditions.push(ilike(entityTable.name, `%${searchQuery}%`))
+  }
+
+  // Filter by state
+  if (stateFilter !== "all") {
+    conditions.push(eq(entityTable.state, stateFilter))
+  }
+
+  // Filter by city
+  if (cityFilter !== "all") {
+    conditions.push(eq(entityTable.city, cityFilter))
+  }
+
+  // Filter by entity type
+  if (entityTypeFilter !== "all") {
+    conditions.push(eq(entityTable.entityType, entityTypeFilter))
+  }
+
+  const whereClause = conditions.length > 0 ? and(...conditions) : undefined
+
+  // Determine sorting
+  let orderByClause
+  switch (sort) {
+    case "upvotes":
+      orderByClause = desc(sql`count(distinct ${upvote.id})`)
+      break
+    case "alphabetical":
+      orderByClause = asc(entityTable.name)
+      break
+    case "recent":
+    default:
+      orderByClause = desc(entityTable.createdAt)
+      break
+  }
+
+  // Get entities with upvotes, ratings, reviews
+  const entitiesData = await db
+    .select({
+      id: entityTable.id,
+      name: entityTable.name,
+      slug: entityTable.slug,
+      description: entityTable.description,
+      logoUrl: entityTable.logoUrl,
+      websiteUrl: entityTable.websiteUrl,
+      email: entityTable.email,
+      city: entityTable.city,
+      state: entityTable.state,
+      entityType: entityTable.entityType,
+      status: entityTable.status,
+      dailyRanking: entityTable.dailyRanking,
+      createdAt: entityTable.createdAt,
+      upvoteCount: sql<number>`count(distinct ${upvote.id})`.mapWith(Number),
+      avgRating: sql<number>`round(avg(${reviews.rating}), 1)`.mapWith(Number),
+      reviewCount: sql<number>`cast(count(distinct ${reviews.id}) as int)`.mapWith(Number),
+    })
+    .from(entityTable)
+    .leftJoin(upvote, eq(upvote.entityId, entityTable.id))
+    .leftJoin(reviews, eq(reviews.entityId, entityTable.id))
+    .where(whereClause)
+    .groupBy(
+      entityTable.id,
+      entityTable.name,
+      entityTable.slug,
+      entityTable.description,
+      entityTable.logoUrl,
+      entityTable.websiteUrl,
+      entityTable.email,
+      entityTable.city,
+      entityTable.state,
+      entityTable.entityType,
+      entityTable.status,
+      entityTable.dailyRanking,
+      entityTable.createdAt,
+    )
+    .orderBy(orderByClause)
+    .limit(limit)
+    .offset(offset)
+
+  const enrichedEntities = await enrichEntitiesWithUserData(entitiesData, userId)
+
+  // Get total count
+  const totalCountResult = await db
+    .select({ count: count(entityTable.id) })
+    .from(entityTable)
+    .where(whereClause)
+
+  const totalCount = totalCountResult[0]?.count || 0
+
+  // Get unique states for filter dropdown
+  const statusCondition = isAdminOrModerator
+    ? or(eq(entityTable.status, "published"), eq(entityTable.status, "pending"))
+    : eq(entityTable.status, "published")
+
+  const statesResult = await db
+    .selectDistinct({ state: entityTable.state })
+    .from(entityTable)
+    .where(
+      and(sql`${entityTable.state} IS NOT NULL AND ${entityTable.state} != ''`, statusCondition),
+    )
+    .orderBy(asc(entityTable.state))
+
+  const states = statesResult.map((r) => r.state).filter((s): s is string => s !== null && s !== "")
+
+  // Get unique city-state pairs for filter dropdown
+  const citiesResult = await db
+    .selectDistinct({ city: entityTable.city, state: entityTable.state })
+    .from(entityTable)
+    .where(
+      and(
+        sql`${entityTable.city} IS NOT NULL AND ${entityTable.city} != ''`,
+        sql`${entityTable.state} IS NOT NULL AND ${entityTable.state} != ''`,
+        statusCondition,
+      ),
+    )
+    .orderBy(asc(entityTable.city))
+
+  const cityStatePairs = citiesResult
+    .filter((r): r is { city: string; state: string } => !!r.city && !!r.state)
+    .map((r) => ({ city: r.city, state: r.state }))
+
+  return {
+    entities: enrichedEntities,
+    totalCount,
+    states,
+    cityStatePairs,
   }
 }
