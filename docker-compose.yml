@@ -1,0 +1,67 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: gems-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: gems
+      POSTGRES_PASSWORD: gems_password
+      POSTGRES_DB: gems_of_india
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U gems"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: gems-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: gems-app
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://gems:gems_password@postgres:5432/gems_of_india
+      REDIS_URL: redis://redis:6379
+      NEXT_PUBLIC_URL: http://localhost:3000
+      BETTER_AUTH_URL: http://localhost:3000
+      BETTER_AUTH_SECRET: development_secret_change_in_production
+      NEXT_TELEMETRY_DISABLED: 1
+    env_file:
+      - .env.docker
+    ports:
+      - "3000:3000"
+    volumes:
+      # Mount the app code for hot reload in development
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    command: sh -c "pnpm db:push && pnpm db:seed && pnpm dev"
+
+volumes:
+  postgres_data:
+  redis_data:

@@ -68,6 +68,43 @@ Before you begin, ensure you have the following installed:
 
 The application should now be running at [http://localhost:3000](http://localhost:3000).
 
+## Docker Setup (Recommended)
+
+The easiest way to get started is with Docker. This will set up PostgreSQL 17, Redis 7, and the Next.js app with one command:
+
+```bash
+# Start everything (runs in background)
+pnpm docker:up:dev
+
+# View logs
+pnpm docker:logs
+
+# Stop everything
+pnpm docker:down
+```
+
+**What happens automatically:**
+
+- PostgreSQL 17 database created and configured
+- Redis 7 for caching and sessions
+- Database schema migrated
+- **Dummy data seeded** (users, entities, reviews, etc.)
+- Development server starts with hot reload
+
+**Access:**
+
+- App: http://localhost:3000
+- Database: `localhost:5432` (user: `gems`, password: `gems_password`)
+- Redis: `localhost:6379`
+
+**Test Users (after seeding):**
+
+- Admin: rajesh.kumar@example.com
+- Moderator: priya.sharma@example.com
+- User: amit.patel@example.com
+
+For complete Docker documentation including production setup, see [DOCKER.md](./DOCKER.md).
+
 ## Available Scripts
 
 This project includes the following scripts, which can be run with `pnpm run <script_name>`:
@@ -79,5 +116,10 @@ This project includes the following scripts, which can be run with `pnpm run <sc
 - `db:generate`: Generates database migration files with Drizzle Kit.
 - `db:migrate`: Applies generated migrations to the database.
 - `db:push`: Pushes the schema directly to the database (useful for development).
+- `db:seed`: Seeds the database with dummy data.
 - `db:studio`: Opens Drizzle Studio, a GUI for your database.
 - `categories`: A script for managing categories.
+- `docker:up:dev`: Start development environment with Docker.
+- `docker:down`: Stop Docker containers.
+- `docker:logs`: View Docker logs.
+- `docker:up:prod`: Start production environment with Docker.

@@ -1,0 +1,28 @@
+# Development Dockerfile with hot reload support
+FROM node:22-alpine
+
+# Install dependencies for native modules
+RUN apk add --no-cache libc6-compat
+
+WORKDIR /app
+
+# Enable pnpm
+RUN corepack enable pnpm
+
+# Copy package files
+COPY package.json pnpm-lock.yaml* ./
+
+# Install all dependencies (including dev dependencies)
+RUN pnpm install --frozen-lockfile
+
+# Copy source code
+COPY . .
+
+# Expose port
+EXPOSE 3000
+
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+# Default command (can be overridden in docker-compose)
+CMD ["pnpm", "dev"]

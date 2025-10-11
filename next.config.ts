@@ -7,6 +7,9 @@ import remarkGfm from "remark-gfm"
 const nextConfig: NextConfig = {
   /* config options here */
 
+  // Enable standalone output for Docker
+  output: "standalone",
+
   // Configuration for MDX
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
 

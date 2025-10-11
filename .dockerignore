@@ -1,0 +1,50 @@
+# Dependencies
+node_modules
+npm-debug.log
+yarn-error.log
+pnpm-debug.log
+.pnpm-store
+
+# Build files
+.next
+out
+dist
+build
+*.tsbuildinfo
+
+# Environment files
+.env
+.env.local
+.env.production.local
+.env.development.local
+
+# Testing
+coverage
+.nyc_output
+
+# Misc
+.DS_Store
+*.pem
+*.log
+
+# Debug
+.vscode
+.idea
+
+# Git
+.git
+.gitignore
+
+# CI/CD
+.github
+.gitlab-ci.yml
+
+# Docker
+Dockerfile*
+docker-compose*
+.dockerignore
+
+# Documentation
+README.md
+LICENSE
+*.md
