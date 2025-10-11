@@ -184,8 +184,8 @@ async function MembersData({
               index={index}
               isAuthenticated={isAuthenticated}
               userHasUpvoted={entity.userHasUpvoted ?? false}
-              avgRating={0}
-              reviewCount={0}
+              avgRating={entity.avgRating ?? 0}
+              reviewCount={entity.reviewCount ?? 0}
             />
           ))}
         </div>
