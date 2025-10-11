@@ -83,10 +83,12 @@ jobs:
           mkdir -p deploy
           cp -R .next deploy/
           cp -R public deploy/
+          cp -R drizzle deploy/
           cp package.json deploy/
           cp pnpm-lock.yaml deploy/
           cp next.config.ts deploy/
           cp middleware.ts deploy/
+          cp drizzle.config.ts deploy/
         env:
           # Mask sensitive information in logs
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -104,9 +106,9 @@ jobs:
           TARGET: ~/gems-of-india # The destination directory on your server.
           EXCLUDE: ".env.production"
 
-      # Step 7: Install production dependencies and restart the application with PM2.
+      # Step 7: Install production dependencies, run migrations, and restart the application with PM2.
       # This step executes commands on your server after the files have been transferred.
-      - name: Restart PM2 Application
+      - name: Run migrations and restart PM2 Application
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.DROPLET_HOST }}
@@ -120,6 +122,10 @@ jobs:
             # Install only production dependencies using pnpm.
             # Suppress verbose output to avoid exposing sensitive information
             pnpm install --prod --silent
+
+            # Run database migrations.
+            # This ensures the database schema is up to date before restarting the app.
+            pnpm db:migrate
 
             # Restart the application using PM2.
             # 'pm2 reload' provides a zero-downtime restart.

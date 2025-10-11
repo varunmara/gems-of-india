@@ -55,12 +55,12 @@ export function NavMenu({ showDashboard = true }: NavMenuProps) {
               <li>
                 <NavigationMenuLink asChild>
                   <Link
-                    href="/categories"
+                    href="/directory"
                     className="block rounded-md px-2 py-2 text-sm no-underline transition-colors outline-none select-none"
                   >
-                    <div className="mb-1 font-medium">Categories</div>
+                    <div className="mb-1 font-medium">Directory</div>
                     <p className="text-muted-foreground text-xs leading-tight">
-                      Browse gems by category
+                      Browse and filter all gems
                     </p>
                   </Link>
                 </NavigationMenuLink>
@@ -77,6 +77,19 @@ export function NavMenu({ showDashboard = true }: NavMenuProps) {
                 className={`${navigationMenuTriggerStyle()} h-9 px-3 text-sm`}
               >
                 Dashboard
+              </Link>
+            </NavigationMenuLink>
+          </NavigationMenuItem>
+        )}
+
+        {showDashboard && (
+          <NavigationMenuItem>
+            <NavigationMenuLink asChild>
+              <Link
+                href="/directory"
+                className={`${navigationMenuTriggerStyle()} h-9 px-3 text-sm`}
+              >
+                Directory
               </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>

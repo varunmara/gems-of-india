@@ -35,10 +35,10 @@ export function BottomNav() {
       type: "link" as const,
     },
     {
-      href: "/categories",
+      href: "/directory",
       icon: RiAppsLine,
-      label: "Categories",
-      isActive: pathname === "/categories",
+      label: "Directory",
+      isActive: pathname === "/directory",
       type: "link" as const,
     },
     {

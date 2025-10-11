@@ -5,6 +5,7 @@ import Link from "next/link"
 import {
   RiDashboardLine,
   RiFlashlightLine,
+  RiFolderLine,
   RiHomeLine,
   RiLayoutGridLine,
   RiLoginBoxLine,
@@ -134,11 +135,11 @@ export default async function Nav() {
                         </SheetClose>
                         <SheetClose asChild>
                           <Link
-                            href="/categories"
+                            href="/directory"
                             className="hover:bg-muted/50 flex items-center gap-3 px-6 py-2.5 text-sm transition-colors"
                           >
                             <RiLayoutGridLine className="text-muted-foreground h-4 w-4" />
-                            <span>Categories</span>
+                            <span>Directory</span>
                           </Link>
                         </SheetClose>
                         <SheetClose asChild>
@@ -148,6 +149,15 @@ export default async function Nav() {
                           >
                             <RiDashboardLine className="text-muted-foreground h-4 w-4" />
                             <span>Dashboard</span>
+                          </Link>
+                        </SheetClose>
+                        <SheetClose asChild>
+                          <Link
+                            href="/directory"
+                            className="hover:bg-muted/50 flex items-center gap-3 px-6 py-2.5 text-sm transition-colors"
+                          >
+                            <RiFolderLine className="text-muted-foreground h-4 w-4" />
+                            <span>Directory</span>
                           </Link>
                         </SheetClose>
                       </div>

@@ -370,7 +370,7 @@ export function SubmitEntityFormNew() {
           {[
             { step: 1, label: "Basic Info", icon: RiInformation2Line },
             { step: 2, label: "Categories", icon: RiListCheck },
-            { step: 3, label: "Contact & Social", icon: RiMapPinLine },
+            { step: 3, label: "Contact", icon: RiMapPinLine },
             { step: 4, label: "Review", icon: RiFileCheckLine },
           ].map(({ step, label, icon: Icon }) => (
             <div
