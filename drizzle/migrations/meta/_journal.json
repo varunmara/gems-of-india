@@ -8,6 +8,13 @@
       "when": 1756595444352,
       "tag": "0000_empty_iceman",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1760148676721,
+      "tag": "0001_oval_owl",
+      "breakpoints": true
     }
   ]
 }
