@@ -701,8 +701,7 @@ preflight_checks() {
     # Check if project directory exists
     if [ ! -d "$SCRIPT_DIR/$PROJECT_DIR" ]; then
         print_error "Project directory '$PROJECT_DIR' not found!"
-        print_info "Please ensure this script is in the same directory as '$PROJECT_DIR' folder"
-        exit 1
+        https://github.com/varunmara/gems-of-india
     fi
     
     # Check internet connectivity
