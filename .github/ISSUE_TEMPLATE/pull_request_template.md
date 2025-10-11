@@ -14,4 +14,4 @@ A clear and concise description of the changes proposed.
 Provide any relevant context or background information.
 
 **Additional Details**
-Add any other details that might help reviewers understand your pull request.your pull request.
+Add any other details that might help reviewers understand your pull request.
