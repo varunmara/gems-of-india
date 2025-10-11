@@ -1,0 +1,17 @@
+name: Other
+description: Use this for any other issues. Please do NOT create blank issues
+title: "[Other]: "
+labels: ["🚦 status: awaiting triage"]
+body:
+  - type: textarea
+    attributes:
+      label: What would you like to share?
+      description: Provide a clear and concise explanation of your issue.
+      placeholder: "Summarize the issue, steps to reproduce, expected vs actual behavior"
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Additional information
+      description: Is there anything else we should know about this issue?
+      placeholder: "Links, screenshots, stack traces, or any extra context"
