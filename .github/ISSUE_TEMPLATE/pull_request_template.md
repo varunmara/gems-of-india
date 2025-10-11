@@ -1,17 +1,17 @@
 ---
-name: Question
-about: Ask a question or seek clarification
-title: "[QUESTION] "
-labels: discussion
+name: Pull Request
+about: Submit a pull request to propose changes or improvements
+title: "[PR] "
+labels: pull-request
 assignees: ''
 
 ---
 
-**Question**
-A clear and concise question about the project.
+**Description**
+A clear and concise description of the changes proposed.
 
 **Context**
 Provide any relevant context or background information.
 
 **Additional Details**
-Add any other details that might help answer your question.
+Add any other details that might help reviewers understand your pull request.your pull request.

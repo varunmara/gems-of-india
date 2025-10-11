@@ -23,6 +23,7 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Environment**
+
 - OS: [e.g., Windows 10]
 - Browser: [e.g., Chrome 91]
 - Version: [e.g., v1.0.0]

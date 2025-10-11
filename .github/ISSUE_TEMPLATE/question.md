@@ -14,4 +14,4 @@ A clear and concise question about the project.
 Provide any relevant context or background information.
 
 **Additional Details**
-Add any other details that might help answer your question.
+Add any other details that might help answer your question
