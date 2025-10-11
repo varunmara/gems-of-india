@@ -26,7 +26,7 @@ If applicable, add screenshots to help explain your problem.
 ## Environment
 
 - OS: [e.g., Windows 10]
-- Browser: [e.g., Chrome 91]
+- Browser: [e.g., Chrome 120]
 - Version: [e.g., v1.0.0]
 
 **Additional Context**
