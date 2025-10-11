@@ -47,7 +47,7 @@ export default function OverviewPage() {
     )
   }
   const isOwner = session?.user?.id === entity.createdBy
-  const isAdmin = session?.user?.role === "admin" || session?.user?.role === "maintainer"
+  const isAdminOrModerator = session?.user?.role === "admin" || session?.user?.role === "moderator"
 
   return (
     <div className="space-y-6">
@@ -78,19 +78,19 @@ export default function OverviewPage() {
         )}
 
       {/* Edit button for owners */}
-      {(isOwner || isAdmin) && (
+      {(isOwner || isAdminOrModerator) && (
         <div className="mt-4 mb-4 flex flex-wrap items-center gap-4">
           <EditButton
             entitySlug={entity.slug}
-            canEdit={isAdmin || (isOwner && entity.status === "pending")}
+            canEdit={isAdminOrModerator || (isOwner && entity.status === "pending")}
           />
 
           {/* Status dropdown for admins/maintainers */}
-          {isAdmin && (
+          {isAdminOrModerator && (
             <EntityStatusDropdown
               entityId={entity.id}
               currentStatus={entity.status}
-              isAdmin={isAdmin}
+              isAdmin={isAdminOrModerator}
             />
           )}
         </div>
