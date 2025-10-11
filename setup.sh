@@ -242,7 +242,7 @@ EOF
 # STEP 5: Collect API Keys (At the End)
 ###############################################################################
 collect_api_keys_at_end() {
-    print_header "🔑 API Keys Required"
+    print_header " API Keys Required"
     
     cd "$SCRIPT_DIR/$PROJECT_DIR"
     
@@ -258,7 +258,7 @@ collect_api_keys_at_end() {
         
         if [ "$HAS_TURNSTILE" -gt 0 ] && [ "$HAS_RESEND" -gt 0 ] && [ "$HAS_GOOGLE" -gt 0 ] && \
            [ -n "$TURNSTILE_VAL" ] && [ -n "$RESEND_VAL" ] && [ -n "$GOOGLE_VAL" ]; then
-            print_success "✅ All API keys already configured!"
+            print_success " All API keys already configured!"
             print_info "Turnstile: ${TURNSTILE_VAL:0:10}..."
             print_info "Resend: ${RESEND_VAL:0:10}..."
             print_info "Google: ${GOOGLE_VAL:0:20}..."
@@ -267,7 +267,7 @@ collect_api_keys_at_end() {
     fi
     
     echo -e "═══════════════════════════════════════════════════════════════"
-    echo -e "  ⚠️  IMPORTANT: Your app needs 3 FREE API services to work!  "
+    echo -e "   IMPORTANT: Your app needs 3 FREE API services to work!  "
     echo -e "═══════════════════════════════════════════════════════════════"
     echo ""
     echo -e "${YELLOW}Without these, users CANNOT sign up or log in!"
@@ -343,7 +343,7 @@ collect_api_keys_at_end() {
     echo -e "${BLUE}STEP 5: Click 'Add'"
     echo ""
     echo -e "${BLUE}STEP 6: Copy the key (starts with re_...)"
-    echo "        ⚠️  Copy NOW - you can't see it again!"
+    echo "          Copy NOW - you can't see it again!"
     echo ""
     echo -e "${YELLOW}═══════════════════════════════════════════════════════════════"
     echo ""
@@ -427,7 +427,7 @@ collect_api_keys_at_end() {
     sed -i "s|^GOOGLE_CLIENT_SECRET=.*|GOOGLE_CLIENT_SECRET=\"$GOOGLE_CLIENT_SECRET\"|" .env
     sed -i "s|^NEXT_PUBLIC_ONE_TAP_CLIENT_ID=.*|NEXT_PUBLIC_ONE_TAP_CLIENT_ID=\"$GOOGLE_CLIENT_ID\"|" .env
     
-    print_success "✅ All API keys saved to .env file!"
+    print_success " All API keys saved to .env file!"
 }
 
 ###############################################################################
@@ -653,26 +653,26 @@ seed_sample_data() {
 # STEP 10: Final Instructions
 ###############################################################################
 start_server_message() {
-    print_header "🎉 Setup Complete!"
+    print_header " Setup Complete!"
     
     cd "$SCRIPT_DIR/$PROJECT_DIR"
     
     echo -e "═══════════════════════════════════════════════════════════════"
-    echo -e "  ✅ Everything is installed and configured!                   "
+    echo -e "  Everything is installed and configured!                   "
     echo -e "═══════════════════════════════════════════════════════════════"
     echo ""
     echo -e "${BLUE}What was installed:"
-    echo "  ✅ Node.js v$(node -v)"
-    echo "  ✅ pnpm v$(pnpm -v)"
-    echo "  ✅ PostgreSQL (running)"
-    echo "  ✅ Database: gems_of_india"
-    echo "  ✅ Dependencies: ~847 packages"
-    echo "  ✅ Database tables: 20+ created"
-    echo "  ✅ Sample data: 5 entities, 10+ reviews"
-    echo "  ✅ API keys: Configured"
+    echo "   Node.js v$(node -v)"
+    echo "   pnpm v$(pnpm -v)"
+    echo "   PostgreSQL (running)"
+    echo "   Database: gems_of_india"
+    echo "   Dependencies: ~847 packages"
+    echo "   Database tables: 20+ created"
+    echo "   Sample data: 5 entities, 10+ reviews"
+    echo "   API keys: Configured"
     echo ""
     echo -e "${YELLOW}═══════════════════════════════════════════════════════════════"
-    echo -e "${YELLOW}  🚀 START THE SERVER:"
+    echo -e "${YELLOW}   START THE SERVER:"
     echo -e "${YELLOW}═══════════════════════════════════════════════════════════════"
     echo ""
     echo -e "  ${CYAN}cd gems-of-india"
@@ -682,7 +682,7 @@ start_server_message() {
     echo ""
     echo -e "${BLUE}To stop server: Press Ctrl+C"
     echo ""
-    print_success "Setup complete! 🎉"
+    print_success "Setup complete! "
 }
 
 
@@ -692,16 +692,10 @@ start_server_message() {
 preflight_checks() {
     print_header "Pre-flight Checks"
     
-    # Check if running as root
-    if [ "$EUID" -eq 0 ]; then
-        print_error "Don't run this script as root! Use: sudo ./setup.sh"
-        exit 1
-    fi
-    
     # Check if project directory exists
     if [ ! -d "$SCRIPT_DIR/$PROJECT_DIR" ]; then
         print_error "Project directory '$PROJECT_DIR' not found!"
-        https://github.com/varunmara/gems-of-india
+        git clone https://github.com/varunmara/gems-of-india
     fi
     
     # Check internet connectivity
