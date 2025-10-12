@@ -20,6 +20,7 @@ import {
 import { and, asc, count, desc, eq, sql } from "drizzle-orm"
 
 import { auth } from "@/lib/auth"
+import { canModerateEntity } from "@/lib/moderator-permissions"
 
 // Get session helper
 async function getSession() {
@@ -386,7 +387,7 @@ export async function getRelatedEntities(
   }
 }
 
-// Update entity status (admin/maintainer only)
+// Update entity status (admin/moderator only)
 export async function updateEntityStatus(
   entityId: string,
   status: "pending" | "in_review" | "published",
@@ -397,20 +398,31 @@ export async function updateEntityStatus(
     return { success: false, error: "Authentication required" }
   }
 
-  // Check if user is admin or maintainer
-  if (!session.user.role || !["admin", "maintainer"].includes(session.user.role)) {
-    return {
-      success: false,
-      error: "You don't have permission to update entity status",
-    }
-  }
-
   try {
     // Get entity to check if it exists
     const [entityData] = await db.select().from(entity).where(eq(entity.id, entityId)).limit(1)
 
     if (!entityData) {
       return { success: false, error: "Entity not found" }
+    }
+
+    // Check permissions - admin can edit always, moderator based on scope
+    const isAdmin = session.user.role === "admin"
+    const isModerator = session.user.role === "moderator"
+
+    let canEdit = false
+    if (isAdmin) {
+      canEdit = true
+    } else if (isModerator) {
+      // Check if moderator has permission for this entity
+      canEdit = await canModerateEntity(session.user.id, entityId)
+    }
+
+    if (!canEdit) {
+      return {
+        success: false,
+        error: "You don't have permission to update entity status",
+      }
     }
 
     // Update entity status

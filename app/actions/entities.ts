@@ -19,6 +19,7 @@ import {
 import { and, asc, count, desc, eq, ilike, inArray, or, SQL, sql } from "drizzle-orm"
 
 import { auth } from "@/lib/auth"
+import { canModerateEntity } from "@/lib/moderator-permissions"
 
 // Function to generate a unique slug
 async function generateUniqueSlug(name: string): Promise<string> {
@@ -568,10 +569,20 @@ export async function getEntityById(entityId: string) {
       return { success: false, error: "Entity not found" }
     }
 
-    // Check permissions - owner can edit if pending, admin can edit always
+    // Check permissions - owner can edit if pending, admin can edit always, moderator can edit based on scope
     const isOwner = entityData.createdBy === session.user.id
     const isAdmin = session.user.role === "admin"
-    const canEdit = isAdmin || (isOwner && entityData.status === "pending")
+    const isModerator = session.user.role === "moderator"
+
+    let canEdit = false
+    if (isAdmin) {
+      canEdit = true
+    } else if (isModerator) {
+      // Check if moderator has permission for this entity
+      canEdit = await canModerateEntity(session.user.id, entityId)
+    } else if (isOwner && entityData.status === "pending") {
+      canEdit = true
+    }
 
     if (!canEdit) {
       return {
@@ -767,10 +778,20 @@ export async function updateEntity(entityId: string, entityData: EntitySubmissio
       return { success: false, error: "Entity not found" }
     }
 
-    // Check permissions - owner can edit if pending, admin can edit always
+    // Check permissions - owner can edit if pending, admin can edit always, moderator can edit based on scope
     const isOwner = currentEntity.createdBy === session.user.id
     const isAdmin = session.user.role === "admin"
-    const canEdit = isAdmin || (isOwner && currentEntity.status === "pending")
+    const isModerator = session.user.role === "moderator"
+
+    let canEdit = false
+    if (isAdmin) {
+      canEdit = true
+    } else if (isModerator) {
+      // Check if moderator has permission for this entity
+      canEdit = await canModerateEntity(session.user.id, entityId)
+    } else if (isOwner && currentEntity.status === "pending") {
+      canEdit = true
+    }
 
     if (!canEdit) {
       return {

@@ -15,6 +15,13 @@
       "when": 1760148676721,
       "tag": "0001_oval_owl",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1760311544150,
+      "tag": "0002_tidy_black_widow",
+      "breakpoints": true
     }
   ]
 }

@@ -3,10 +3,8 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 
-import { format, parseISO } from "date-fns"
 import {
   Ban,
-  Calendar,
   Filter,
   Folder,
   MoreHorizontal,
@@ -35,7 +33,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select"
-import { addCategory, getAdminStatsAndUsers, getCategories } from "@/app/actions/admin"
+import { AssignModeratorScopeDialog } from "@/components/admin/assign-moderator-scope-dialog"
+import {
+  addCategory,
+  changeUserRole,
+  getAdminStatsAndUsers,
+  getCategories,
+} from "@/app/actions/admin"
 
 type User = {
   id: string
@@ -46,6 +50,7 @@ type User = {
   createdAt?: string
   hasPublished?: boolean
   entityCount?: number
+  moderatorScope?: string | null
 }
 
 export default function AdminDashboard() {
@@ -77,15 +82,13 @@ export default function AdminDashboard() {
   })
   const [loading, setLoading] = useState(false)
   const [isLoading, setIsLoading] = useState<string | undefined>()
-  const [freeLaunchAvailability, setFreeLaunchAvailability] = useState<{
-    date: string
-    freeSlots: number
-  } | null>(null)
   const [categories, setCategories] = useState<{ name: string }[]>([])
   const [totalCategories, setTotalCategories] = useState(0)
   const [newCategory, setNewCategory] = useState("")
   const [isAddingCategory, setIsAddingCategory] = useState(false)
   const [categoryError, setCategoryError] = useState<string | null>(null)
+  const [scopeDialogOpen, setScopeDialogOpen] = useState(false)
+  const [selectedUserForScope, setSelectedUserForScope] = useState<User | null>(null)
   const router = useRouter()
   useIsMobile()
 
@@ -115,7 +118,6 @@ export default function AdminDashboard() {
         newPendingEntitiesToday: 0,
         newPublishedEntitiesToday: 0,
       })
-      setFreeLaunchAvailability(null)
     }
     setLoading(false)
   }
@@ -247,38 +249,6 @@ export default function AdminDashboard() {
               </span>
             )}
           </div>
-        </div>
-      </div>
-
-      {/* Free Launch Availability */}
-      <div className="bg-card overflow-hidden rounded-lg border">
-        <div className="flex items-center justify-between border-b p-3">
-          <div className="flex items-center gap-2">
-            <Calendar className="text-muted-foreground h-4 w-4" />
-            <h2 className="text-sm font-medium">Free Launch Availability</h2>
-          </div>
-        </div>
-        <div className="p-3">
-          {freeLaunchAvailability ? (
-            <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center">
-              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                <span className="text-muted-foreground text-sm">Next available:</span>
-                <div className="flex items-center gap-1">
-                  <span className="font-medium">
-                    {format(parseISO(freeLaunchAvailability.date), "MMMM d, yyyy")}
-                  </span>
-                  <span className="text-muted-foreground text-sm">
-                    ({freeLaunchAvailability.freeSlots} slot
-                    {freeLaunchAvailability.freeSlots > 1 ? "s" : ""} available)
-                  </span>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="text-muted-foreground text-sm">
-              No free entity slots available in the next 180 days
-            </div>
-          )}
         </div>
       </div>
 
@@ -420,12 +390,19 @@ export default function AdminDashboard() {
                           )}
                         </td>
                         <td className="p-2 text-center">
-                          <Badge
-                            variant={user.role === "admin" ? "secondary" : "outline"}
-                            className="text-xs"
-                          >
-                            {user.role || "user"}
-                          </Badge>
+                          <div className="flex flex-col items-center gap-1">
+                            <Badge
+                              variant={user.role === "admin" ? "secondary" : "outline"}
+                              className="text-xs"
+                            >
+                              {user.role || "user"}
+                            </Badge>
+                            {user.role === "moderator" && user.moderatorScope && (
+                              <span className="text-muted-foreground text-[10px]">
+                                {user.moderatorScope}
+                              </span>
+                            )}
+                          </div>
                         </td>
                         <td className="p-2 text-center">
                           {user.banned ? (
@@ -445,6 +422,10 @@ export default function AdminDashboard() {
                             router={router}
                             setIsLoading={setIsLoading}
                             isLoading={isLoading}
+                            onEditScope={(user) => {
+                              setSelectedUserForScope(user)
+                              setScopeDialogOpen(true)
+                            }}
                           />
                         </td>
                       </tr>
@@ -476,12 +457,19 @@ export default function AdminDashboard() {
                           No Published Entities
                         </Badge>
                       )}
-                      <Badge
-                        variant={user.role === "admin" ? "secondary" : "outline"}
-                        className="text-xs"
-                      >
-                        {user.role || "user"}
-                      </Badge>
+                      <div className="flex flex-col gap-0.5">
+                        <Badge
+                          variant={user.role === "admin" ? "secondary" : "outline"}
+                          className="text-xs"
+                        >
+                          {user.role || "user"}
+                        </Badge>
+                        {user.role === "moderator" && user.moderatorScope && (
+                          <span className="text-muted-foreground text-[10px]">
+                            {user.moderatorScope}
+                          </span>
+                        )}
+                      </div>
                       {user.banned ? (
                         <Badge variant="destructive" className="text-xs">
                           Banned
@@ -499,6 +487,10 @@ export default function AdminDashboard() {
                     router={router}
                     setIsLoading={setIsLoading}
                     isLoading={isLoading}
+                    onEditScope={(user) => {
+                      setSelectedUserForScope(user)
+                      setScopeDialogOpen(true)
+                    }}
                   />
                 </div>
               ))}
@@ -595,6 +587,14 @@ export default function AdminDashboard() {
           </div>
         </div>
       </div>
+
+      {/* Moderator Scope Assignment Dialog */}
+      <AssignModeratorScopeDialog
+        open={scopeDialogOpen}
+        onOpenChange={setScopeDialogOpen}
+        user={selectedUserForScope}
+        onSuccess={fetchData}
+      />
     </div>
   )
 }
@@ -605,12 +605,14 @@ function DropdownMenuUserActions({
   router,
   setIsLoading,
   isLoading,
+  onEditScope,
 }: {
   user: User
   onRefresh: () => Promise<void>
   router: any // eslint-disable-line @typescript-eslint/no-explicit-any
   setIsLoading: (value: string | undefined) => void
   isLoading: string | undefined
+  onEditScope: (user: User) => void
 }) {
   // Ban user
   const handleBanUser = async (id: string) => {
@@ -662,6 +664,24 @@ function DropdownMenuUserActions({
     }
   }
 
+  // Change user role
+  const handleChangeRole = async (id: string, newRole: "user" | "moderator" | "admin") => {
+    setIsLoading(`role-${id}`)
+    try {
+      const result = await changeUserRole(id, newRole)
+      if (result.success) {
+        toast.success(`User role changed to ${newRole}`)
+        onRefresh() // Refresh the list
+      } else {
+        toast.error(result.error || "Failed to change user role")
+      }
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Failed to change user role")
+    } finally {
+      setIsLoading(undefined)
+    }
+  }
+
   // Delete user
   const handleDeleteUser = async (id: string) => {
     setIsLoading(`delete-${id}`)
@@ -702,6 +722,38 @@ function DropdownMenuUserActions({
           <UserCog className="text-muted-foreground mr-2 h-4 w-4 transition-colors group-hover:text-white group-focus:text-white" />
           <span>Impersonate</span>
         </DropdownMenuItem>
+        {user.role !== "moderator" && (
+          <DropdownMenuItem
+            onClick={() => {
+              onEditScope(user)
+            }}
+            disabled={isLoading === `role-${user.id}`}
+            className="focus:bg-accent focus:text-accent-foreground group rounded-md"
+          >
+            <UserCog className="text-muted-foreground mr-2 h-4 w-4 transition-colors group-hover:text-white group-focus:text-white" />
+            <span>Make Moderator</span>
+          </DropdownMenuItem>
+        )}
+        {user.role === "moderator" && (
+          <DropdownMenuItem
+            onClick={() => onEditScope(user)}
+            disabled={isLoading === `role-${user.id}`}
+            className="focus:bg-accent focus:text-accent-foreground group rounded-md"
+          >
+            <UserCog className="text-muted-foreground mr-2 h-4 w-4 transition-colors group-hover:text-white group-focus:text-white" />
+            <span>Edit Scope</span>
+          </DropdownMenuItem>
+        )}
+        {user.role !== "user" && user.role !== undefined && (
+          <DropdownMenuItem
+            onClick={() => handleChangeRole(user.id, "user")}
+            disabled={isLoading === `role-${user.id}`}
+            className="focus:bg-accent focus:text-accent-foreground group rounded-md"
+          >
+            <UserCog className="text-muted-foreground mr-2 h-4 w-4 transition-colors group-hover:text-white group-focus:text-white" />
+            <span>Make User</span>
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem
           onClick={() => handleDeleteUser(user.id)}
           disabled={isLoading === `delete-${user.id}`}

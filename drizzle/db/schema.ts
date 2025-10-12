@@ -8,6 +8,7 @@ import {
   primaryKey,
   text,
   timestamp,
+  unique,
   uuid,
   varchar,
 } from "drizzle-orm/pg-core"
@@ -213,6 +214,31 @@ export const upvote = pgTable(
     createdAtIdx: index("upvote_created_at_idx").on(table.createdAt),
     // Composite index for user-entity lookups
     userEntityIdx: index("upvote_user_entity_idx").on(table.userId, table.entityId),
+  }),
+)
+
+// Moderator scope table for limiting moderator permissions
+export const moderatorScope = pgTable(
+  "moderator_scope",
+  {
+    id: uuid("id")
+      .primaryKey()
+      .default(sql`gen_random_uuid()`),
+    moderatorId: uuid("moderator_id")
+      .notNull()
+      .references(() => user.id, { onDelete: "cascade" }),
+    scopeType: text("scope_type").notNull(), // 'all' | 'state' | 'city' | 'entity'
+    entityId: uuid("entity_id").references(() => entity.id, { onDelete: "cascade" }), // for entity-specific
+    state: text("state"), // for state-level
+    city: text("city"), // for city-level
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+    createdBy: uuid("created_by").references(() => user.id),
+    updatedBy: uuid("updated_by").references(() => user.id),
+  },
+  (table) => ({
+    moderatorIdUnique: unique("moderator_scope_moderator_id_unique").on(table.moderatorId),
+    entityIdIdx: index("moderator_scope_entity_id_idx").on(table.entityId),
   }),
 )
 
@@ -552,6 +578,8 @@ export type ReviewTagSelection = typeof reviewTagSelection.$inferSelect
 export type NewReviewTagSelection = typeof reviewTagSelection.$inferInsert
 export type RoleAssignment = typeof roleAssignment.$inferSelect
 export type NewRoleAssignment = typeof roleAssignment.$inferInsert
+export type ModeratorScope = typeof moderatorScope.$inferSelect
+export type NewModeratorScope = typeof moderatorScope.$inferInsert
 
 // Extended types for API responses
 export type ReviewWithUser = Review & {
