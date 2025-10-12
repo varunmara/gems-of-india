@@ -104,7 +104,7 @@ jobs:
           REMOTE_HOST: ${{ secrets.DROPLET_HOST }}
           REMOTE_USER: ${{ secrets.DROPLET_USERNAME }}
           TARGET: ~/gems-of-india # The destination directory on your server.
-          EXCLUDE: ".env.production"
+          EXCLUDE: ".env, .env.production"
 
       # Step 7: Install production dependencies, run migrations, and restart the application with PM2.
       # This step executes commands on your server after the files have been transferred.

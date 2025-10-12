@@ -668,11 +668,14 @@ export async function getChildEntitiesByParentId(
       dailyRanking: entityTable.dailyRanking,
       createdAt: entityTable.createdAt,
       upvoteCount: sql<number>`count(distinct ${upvote.id})`.mapWith(Number),
+      avgRating: sql<number>`round(avg(${reviews.rating}), 1)`.mapWith(Number),
+      reviewCount: sql<number>`cast(count(distinct ${reviews.id}) as int)`.mapWith(Number),
       relationshipType: entityRelationship.relationshipType,
     })
     .from(entityRelationship)
     .innerJoin(entityTable, eq(entityRelationship.childEntityId, entityTable.id))
     .leftJoin(upvote, eq(upvote.entityId, entityTable.id))
+    .leftJoin(reviews, eq(reviews.entityId, entityTable.id))
     .where(queryConditions)
     .groupBy(
       entityTable.id,
