@@ -60,8 +60,13 @@ export async function canModerateEntity(userId: string, entityId: string): Promi
   // Check based on scope type
   switch (scope.scopeType) {
     case "entity": {
+      const scopedEntityId = scope.entityId
+      if (!scopedEntityId) {
+        return false
+      }
+
       // Can edit the specific entity OR any of its children
-      if (scope.entityId === entityId) {
+      if (scopedEntityId === entityId) {
         return true
       }
 
@@ -71,7 +76,7 @@ export async function canModerateEntity(userId: string, entityId: string): Promi
         .from(entityRelationship)
         .where(
           and(
-            eq(entityRelationship.parentEntityId, scope.entityId!),
+            eq(entityRelationship.parentEntityId, scopedEntityId),
             eq(entityRelationship.childEntityId, entityId),
           ),
         )
