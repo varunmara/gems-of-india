@@ -84,60 +84,74 @@ async function seedDatabase() {
 
     // 2. Seed Users
     console.log("👥 Seeding users...")
-    const usersData = [
-      {
-        name: "Rajesh Kumar",
-        email: "rajesh.kumar@example.com",
-        emailVerified: true,
-        image: "https://avatars.githubusercontent.com/u/1?v=4",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        role: "admin",
-      },
-      {
-        name: "Priya Sharma",
-        email: "priya.sharma@example.com",
-        emailVerified: true,
-        image: "https://avatars.githubusercontent.com/u/2?v=4",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        role: "moderator",
-      },
-      {
-        name: "Amit Patel",
-        email: "amit.patel@example.com",
-        emailVerified: true,
-        image: "https://avatars.githubusercontent.com/u/3?v=4",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        role: "user",
-      },
-      {
-        name: "Sneha Reddy",
-        email: "sneha.reddy@example.com",
-        emailVerified: true,
-        image: "https://avatars.githubusercontent.com/u/4?v=4",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        role: "user",
-      },
-      {
-        name: "Vikram Singh",
-        email: "vikram.singh@example.com",
-        emailVerified: true,
-        image: "https://avatars.githubusercontent.com/u/5?v=4",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        role: "user",
-      },
-    ]
+    const existingUsers = await db.query.user.findMany()
+    let insertedUsers
 
-    const insertedUsers = await db.insert(user).values(usersData).returning()
-    console.log(`✅ Seeded ${insertedUsers.length} users`)
+    if (existingUsers.length === 0) {
+      const usersData = [
+        {
+          name: "Rajesh Kumar",
+          email: "rajesh.kumar@example.com",
+          emailVerified: true,
+          image: "https://avatars.githubusercontent.com/u/1?v=4",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          role: "admin",
+        },
+        {
+          name: "Priya Sharma",
+          email: "priya.sharma@example.com",
+          emailVerified: true,
+          image: "https://avatars.githubusercontent.com/u/2?v=4",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          role: "moderator",
+        },
+        {
+          name: "Amit Patel",
+          email: "amit.patel@example.com",
+          emailVerified: true,
+          image: "https://avatars.githubusercontent.com/u/3?v=4",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          role: "user",
+        },
+        {
+          name: "Sneha Reddy",
+          email: "sneha.reddy@example.com",
+          emailVerified: true,
+          image: "https://avatars.githubusercontent.com/u/4?v=4",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          role: "user",
+        },
+        {
+          name: "Vikram Singh",
+          email: "vikram.singh@example.com",
+          emailVerified: true,
+          image: "https://avatars.githubusercontent.com/u/5?v=4",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          role: "user",
+        },
+      ]
+
+      insertedUsers = await db.insert(user).values(usersData).returning()
+      console.log(`✅ Seeded ${insertedUsers.length} users`)
+    } else {
+      console.log("⏭️  Users already exist, skipping...")
+      insertedUsers = existingUsers
+    }
 
     // 3. Seed Entities (People)
     console.log("🧑 Seeding people entities...")
-    const peopleData = [
+    const existingPeopleEntities = await db.query.entity.findMany({
+      where: (entity, { eq }) => eq(entity.entityType, entityType.PERSON)
+    })
+    let insertedPeople
+
+    if (existingPeopleEntities.length === 0) {
+      const peopleData = [
       {
         name: "Dr. Arvind Kejriwal",
         description:
@@ -186,14 +200,24 @@ async function seedDatabase() {
         featuredOnHomepage: false,
         dailyRanking: 5,
       },
-    ]
+      ]
 
-    const insertedPeople = await db.insert(entity).values(peopleData).returning()
-    console.log(`✅ Seeded ${insertedPeople.length} people`)
+      insertedPeople = await db.insert(entity).values(peopleData).returning()
+      console.log(`✅ Seeded ${insertedPeople.length} people`)
+    } else {
+      console.log("⏭️  People entities already exist, skipping...")
+      insertedPeople = existingPeopleEntities
+    }
 
     // 4. Seed Entities (Organizations & Departments)
     console.log("🏢 Seeding organization entities...")
-    const organizationsData = [
+    const existingOrgEntities = await db.query.entity.findMany({
+      where: (entity, { eq }) => eq(entity.entityType, entityType.ORGANIZATION)
+    })
+    let insertedOrgs
+
+    if (existingOrgEntities.length === 0) {
+      const organizationsData = [
       {
         name: "Municipal Corporation of Greater Mumbai",
         description:
@@ -278,14 +302,24 @@ async function seedDatabase() {
         featuredOnHomepage: true,
         dailyRanking: 7,
       },
-    ]
+      ]
 
-    const insertedOrgs = await db.insert(entity).values(organizationsData).returning()
-    console.log(`✅ Seeded ${insertedOrgs.length} organizations`)
+      insertedOrgs = await db.insert(entity).values(organizationsData).returning()
+      console.log(`✅ Seeded ${insertedOrgs.length} organizations`)
+    } else {
+      console.log("⏭️  Organization entities already exist, skipping...")
+      insertedOrgs = existingOrgEntities
+    }
 
     // 5. Seed Infrastructure Entities
     console.log("🏗️ Seeding infrastructure entities...")
-    const infrastructureData = [
+    const existingInfraEntities = await db.query.entity.findMany({
+      where: (entity, { eq }) => eq(entity.entityType, entityType.INFRASTRUCTURE)
+    })
+    let insertedInfra
+
+    if (existingInfraEntities.length === 0) {
+      const infrastructureData = [
       {
         name: "Rajiv Gandhi International Airport",
         description: "Major international airport serving Hyderabad and surrounding regions.",
@@ -321,16 +355,23 @@ async function seedDatabase() {
         featuredOnHomepage: false,
         dailyRanking: 9,
       },
-    ]
+      ]
 
-    const insertedInfra = await db.insert(entity).values(infrastructureData).returning()
-    console.log(`✅ Seeded ${insertedInfra.length} infrastructure entities`)
+      insertedInfra = await db.insert(entity).values(infrastructureData).returning()
+      console.log(`✅ Seeded ${insertedInfra.length} infrastructure entities`)
+    } else {
+      console.log("⏭️  Infrastructure entities already exist, skipping...")
+      insertedInfra = existingInfraEntities
+    }
 
     const allEntities = [...insertedPeople, ...insertedOrgs, ...insertedInfra]
 
     // 6. Link Entities to Categories
     console.log("🔗 Linking entities to categories...")
-    const entityCategoryLinks = [
+    const existingEntityCategoryLinks = await db.query.entityToCategory.findMany()
+
+    if (existingEntityCategoryLinks.length === 0) {
+      const entityCategoryLinks = [
       { entityId: insertedPeople[0].id, categoryId: "politician" },
       { entityId: insertedPeople[0].id, categoryId: "government-official" },
       { entityId: insertedPeople[1].id, categoryId: "non-profit" },
@@ -349,14 +390,20 @@ async function seedDatabase() {
       { entityId: insertedInfra[0].id, categoryId: "infrastructure" },
       { entityId: insertedInfra[1].id, categoryId: "transport" },
       { entityId: insertedInfra[1].id, categoryId: "infrastructure" },
-    ]
+      ]
 
-    await db.insert(entityToCategory).values(entityCategoryLinks)
-    console.log(`✅ Linked ${entityCategoryLinks.length} entity-category relationships`)
+      await db.insert(entityToCategory).values(entityCategoryLinks)
+      console.log(`✅ Linked ${entityCategoryLinks.length} entity-category relationships`)
+    } else {
+      console.log("⏭️  Entity-category links already exist, skipping...")
+    }
 
     // 7. Seed Role Assignments
     console.log("💼 Seeding role assignments...")
-    const roleAssignments = [
+    const existingRoleAssignments = await db.query.roleAssignment.findMany()
+
+    if (existingRoleAssignments.length === 0) {
+      const roleAssignments = [
       {
         personId: insertedPeople[0].id,
         orgId: insertedOrgs[2].id, // Delhi Police
@@ -375,14 +422,20 @@ async function seedDatabase() {
         createdBy: insertedUsers[1].id,
         updatedBy: insertedUsers[1].id,
       },
-    ]
+      ]
 
-    await db.insert(roleAssignment).values(roleAssignments)
-    console.log(`✅ Seeded ${roleAssignments.length} role assignments`)
+      await db.insert(roleAssignment).values(roleAssignments)
+      console.log(`✅ Seeded ${roleAssignments.length} role assignments`)
+    } else {
+      console.log("⏭️  Role assignments already exist, skipping...")
+    }
 
     // 8. Seed Reviews
     console.log("⭐ Seeding reviews...")
-    const reviewsData = [
+    const existingReviews = await db.query.reviews.findMany()
+
+    if (existingReviews.length === 0) {
+      const reviewsData = [
       {
         userId: insertedUsers[2].id,
         entityId: insertedOrgs[0].id, // MCGM
@@ -527,14 +580,20 @@ async function seedDatabase() {
         createdAt: new Date("2024-03-20"),
         updatedAt: new Date("2024-03-20"),
       },
-    ]
+      ]
 
-    const insertedReviews = await db.insert(reviews).values(reviewsData).returning()
-    console.log(`✅ Seeded ${insertedReviews.length} reviews`)
+      const insertedReviews = await db.insert(reviews).values(reviewsData).returning()
+      console.log(`✅ Seeded ${insertedReviews.length} reviews`)
+    } else {
+      console.log("⏭️  Reviews already exist, skipping...")
+    }
 
     // 9. Seed Upvotes
     console.log("👍 Seeding upvotes...")
-    const upvotesData = [
+    const existingUpvotes = await db.query.upvote.findMany()
+
+    if (existingUpvotes.length === 0) {
+      const upvotesData = [
       { userId: insertedUsers[0].id, entityId: insertedOrgs[0].id },
       { userId: insertedUsers[1].id, entityId: insertedOrgs[0].id },
       { userId: insertedUsers[2].id, entityId: insertedOrgs[1].id },
@@ -550,14 +609,20 @@ async function seedDatabase() {
       { userId: insertedUsers[2].id, entityId: insertedPeople[0].id },
       { userId: insertedUsers[3].id, entityId: insertedPeople[1].id },
       { userId: insertedUsers[4].id, entityId: insertedPeople[1].id },
-    ]
+      ]
 
-    await db.insert(upvote).values(upvotesData)
-    console.log(`✅ Seeded ${upvotesData.length} upvotes`)
+      await db.insert(upvote).values(upvotesData)
+      console.log(`✅ Seeded ${upvotesData.length} upvotes`)
+    } else {
+      console.log("⏭️  Upvotes already exist, skipping...")
+    }
 
     // 10. Seed Entity Relationships
     console.log("🔗 Seeding entity relationships...")
-    const entityRelationships = [
+    const existingEntityRelationships = await db.query.entityRelationship.findMany()
+
+    if (existingEntityRelationships.length === 0) {
+      const entityRelationships = [
       {
         parentEntityId: insertedOrgs[2].id, // Delhi Police
         childEntityId: insertedPeople[2].id, // Kiran Bedi
@@ -567,21 +632,19 @@ async function seedDatabase() {
         createdBy: insertedUsers[0].id,
         updatedBy: insertedUsers[0].id,
       },
-    ]
+      ]
 
-    await db.insert(entityRelationship).values(entityRelationships)
-    console.log(`✅ Seeded ${entityRelationships.length} entity relationships`)
+      await db.insert(entityRelationship).values(entityRelationships)
+      console.log(`✅ Seeded ${entityRelationships.length} entity relationships`)
+    } else {
+      console.log("⏭️  Entity relationships already exist, skipping...")
+    }
 
     console.log("\n🎉 Database seeding completed successfully!")
     console.log("\n📊 Summary:")
     console.log(`   - ${ENTITY_CATEGORIES.length} categories`)
     console.log(`   - ${insertedUsers.length} users`)
     console.log(`   - ${allEntities.length} entities (people, orgs, infrastructure)`)
-    console.log(`   - ${entityCategoryLinks.length} entity-category links`)
-    console.log(`   - ${roleAssignments.length} role assignments`)
-    console.log(`   - ${insertedReviews.length} reviews`)
-    console.log(`   - ${upvotesData.length} upvotes`)
-    console.log(`   - ${entityRelationships.length} entity relationships`)
   } catch (error) {
     console.error("❌ Error seeding database:", error)
     throw error
