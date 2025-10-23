@@ -96,11 +96,39 @@ export function NavMenu({ showDashboard = true }: NavMenuProps) {
         )}
 
         <NavigationMenuItem>
-          <NavigationMenuLink asChild>
-            <Link href="/submit" className={`${navigationMenuTriggerStyle()} h-9 px-3 text-sm`}>
-              Submit Gem
-            </Link>
-          </NavigationMenuLink>
+          <NavigationMenuTrigger className="h-9 cursor-pointer px-3 text-sm">
+            Submit
+          </NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <ul className="grid w-[200px] gap-1 p-2">
+              <li>
+                <NavigationMenuLink asChild>
+                  <Link
+                    href="/submit"
+                    className="block rounded-md px-2 py-2 text-sm no-underline transition-colors outline-none select-none"
+                  >
+                    <div className="mb-1 font-medium">Single Entity</div>
+                    <p className="text-muted-foreground text-xs leading-tight">
+                      Submit one entity at a time
+                    </p>
+                  </Link>
+                </NavigationMenuLink>
+              </li>
+              <li>
+                <NavigationMenuLink asChild>
+                  <Link
+                    href="/import"
+                    className="block rounded-md px-2 py-2 text-sm no-underline transition-colors outline-none select-none"
+                  >
+                    <div className="mb-1 font-medium">Bulk Import</div>
+                    <p className="text-muted-foreground text-xs leading-tight">
+                      Import multiple entities from Excel
+                    </p>
+                  </Link>
+                </NavigationMenuLink>
+              </li>
+            </ul>
+          </NavigationMenuContent>
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>

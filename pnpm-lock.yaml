@@ -39,7 +39,7 @@ importers:
         version: 15.4.6(@mdx-js/loader@3.1.0(acorn@8.15.0)(webpack@5.101.3(esbuild@0.19.12)))(@mdx-js/react@3.1.0(@types/react@19.1.10)(react@19.1.1))
       "@next/third-parties":
         specifier: ^15.5.3
-        version: 15.5.3(next@15.4.6(@babel/core@7.28.3)(@opentelemetry/api@1.9.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react@19.1.1)
+        version: 15.5.6(next@15.4.6(@babel/core@7.28.3)(@opentelemetry/api@1.9.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react@19.1.1)
       "@radix-ui/react-accordion":
         specifier: ^1.2.10
         version: 1.2.11(@types/react-dom@19.1.7(@types/react@19.1.10))(@types/react@19.1.10)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -226,6 +226,9 @@ importers:
       react-dom:
         specifier: ^19.1.0
         version: 19.1.1(react@19.1.1)
+      react-dropzone:
+        specifier: ^14.3.8
+        version: 14.3.8(react@19.1.1)
       react-hook-form:
         specifier: ^7.56.3
         version: 7.62.0(react@19.1.1)
@@ -292,6 +295,9 @@ importers:
       vaul:
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@19.1.7(@types/react@19.1.10))(@types/react@19.1.10)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      xlsx:
+        specifier: ^0.18.5
+        version: 0.18.5
       zod:
         specifier: ^3.24.4
         version: 3.25.76
@@ -2659,10 +2665,10 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  "@next/third-parties@15.5.3":
+  "@next/third-parties@15.5.6":
     resolution:
       {
-        integrity: sha512-DSKz1N6/WmacV8JAPizHt8dqTP6RljcOgtrnLDEIEI7TGpX1lSfoHwY0TxXVhVoN1WwUHGDo6XUJsSjaLpcMoQ==,
+        integrity: sha512-B1BLvEi7edGERNN0njxpiqbqkp3zAZ69eJ5C0vwj/XINRzcC25b9MCqxbSHq094d306H65UnlhEkBv+a8c74iA==,
       }
     peerDependencies:
       next: ^13.0.0 || ^14.0.0 || ^15.0.0
@@ -5084,6 +5090,13 @@ packages:
     engines: { node: ">=0.4.0" }
     hasBin: true
 
+  adler-32@1.3.1:
+    resolution:
+      {
+        integrity: sha512-ynZ4w/nUUv5rrsR8UUGoe1VC9hZj6V5hU9Qw1HlMDJGEJw5S7TfTErWTjMys6M7vr0YWcPqs3qAr4ss0nDfP+A==,
+      }
+    engines: { node: ">=0.8" }
+
   ai@5.0.44:
     resolution:
       {
@@ -5323,6 +5336,13 @@ packages:
       }
     engines: { node: ">= 4.0.0" }
 
+  attr-accept@2.2.5:
+    resolution:
+      {
+        integrity: sha512-0bDNnY/u6pPwHDMoF0FieU354oBi0a8rD9FcsLwzcGWbc8KS8KPIi7y+s13OlVY+gMWc/9xEMUgNE6Qm8ZllYQ==,
+      }
+    engines: { node: ">=4" }
+
   available-typed-arrays@1.0.7:
     resolution:
       {
@@ -5516,6 +5536,13 @@ packages:
         integrity: sha512-eyrF0jiFpY+3drT6383f1qhkbGsLSifNAjA61IUjZjmLCWjItY6LB9ft9YhoDgwfmclB2zhu51Lc7+95b8NRAg==,
       }
 
+  cfb@1.2.2:
+    resolution:
+      {
+        integrity: sha512-KfdUZsSOw19/ObEWasvBP/Ac4reZvAGauZhs6S/gqNhXhI7cKwvlH7ulj+dOEYnca4bm4SGo8C1bTAQvnTjgQA==,
+      }
+    engines: { node: ">=0.8" }
+
   chalk@4.1.2:
     resolution:
       {
@@ -5659,6 +5686,13 @@ packages:
     peerDependencies:
       react: ^18 || ^19 || ^19.0.0-rc
       react-dom: ^18 || ^19 || ^19.0.0-rc
+
+  codepage@1.15.0:
+    resolution:
+      {
+        integrity: sha512-3g6NUTPd/YtuuGrhMnOMRjFc+LJw/bnMp3+0r/Wcz3IXUuCosKRJvMphm5+Q+bvTVGcJJuRvVLuYba+WojaFaA==,
+      }
+    engines: { node: ">=0.8" }
 
   collapse-white-space@2.1.0:
     resolution:
@@ -5804,6 +5838,14 @@ packages:
     peerDependenciesMeta:
       typescript:
         optional: true
+
+  crc-32@1.2.2:
+    resolution:
+      {
+        integrity: sha512-ROmzCKrTnOwybPcJApAA6WBWij23HVfGVNKqqrZpuyZOHqK2CwHSvpGuyt/UNNvaIjEd8X5IFGp4Mh+Ie1IHJQ==,
+      }
+    engines: { node: ">=0.8" }
+    hasBin: true
 
   crelt@1.0.6:
     resolution:
@@ -6927,6 +6969,13 @@ packages:
       }
     engines: { node: ">= 12" }
 
+  file-selector@2.1.2:
+    resolution:
+      {
+        integrity: sha512-QgXo+mXTe8ljeqUFaX3QVHc5osSItJ/Km+xpocx0aSqWGMSCf6qYs/VnzZgS864Pjn5iceMRFigeAV7AfTlaig==,
+      }
+    engines: { node: ">= 12" }
+
   filelist@1.0.4:
     resolution:
       {
@@ -7000,6 +7049,13 @@ packages:
         integrity: sha512-wzsgA6WOq+09wrU1tsJ09udeR/YZRaeArL9e1wPbFg3GG2yDnC2ldKpxs4xunpFF9DgqCqOIra3bc1HWrJ37Ww==,
       }
     engines: { node: ">=0.4.x" }
+
+  frac@1.1.2:
+    resolution:
+      {
+        integrity: sha512-w/XBfkibaTl3YDqASwfDUqkna4Z2p9cFSr1aHDt0WoMTECnRfBOv2WArlZILlqgWlmdIlALXGpM2AOhEk5W3IA==,
+      }
+    engines: { node: ">=0.8" }
 
   frimousse@0.2.0:
     resolution:
@@ -9685,6 +9741,15 @@ packages:
     peerDependencies:
       react: ^19.1.1
 
+  react-dropzone@14.3.8:
+    resolution:
+      {
+        integrity: sha512-sBgODnq+lcA4P296DY4wacOZz3JFpD99fp+hb//iBO2HHnyeZU3FwWyXJ6salNpqQdsZrgMrotuko/BdJMV8Ug==,
+      }
+    engines: { node: ">= 10.13" }
+    peerDependencies:
+      react: ">= 16.8 || 18.0.0"
+
   react-easy-sort@1.6.0:
     resolution:
       {
@@ -10452,6 +10517,13 @@ packages:
       {
         integrity: sha512-lOQK1ucVg+W6n3FhRwwSeUijxe93b51Bfz5PMRMihVf1iVkl82ePQG7V5vwrhzB11v0NtsR25PSZRGiSomJaJw==,
       }
+
+  ssf@0.11.2:
+    resolution:
+      {
+        integrity: sha512-+idbmIXoYET47hH+d7dfm2epdOMUDjqcB4648sTZ+t2JwoyBFL/insLfB/racrDmsKB3diwsDA696pZMieAC5g==,
+      }
+    engines: { node: ">=0.8" }
 
   stable-hash@0.0.5:
     resolution:
@@ -11293,12 +11365,26 @@ packages:
     engines: { node: ^16.13.0 || >=18.0.0 }
     hasBin: true
 
+  wmf@1.0.2:
+    resolution:
+      {
+        integrity: sha512-/p9K7bEh0Dj6WbXg4JG0xvLQmIadrner1bi45VMJTfnbVHsc7yIajZyoSoK60/dtVBs12Fm6WkUI5/3WAVsNMw==,
+      }
+    engines: { node: ">=0.8" }
+
   word-wrap@1.2.5:
     resolution:
       {
         integrity: sha512-BN22B5eaMMI9UMtjrGd5g5eCYPpCPDUy0FJXbYsaT5zYxjFOckS53SQDE3pWkVoWpHXVb3BrYcEN4Twa55B5cA==,
       }
     engines: { node: ">=0.10.0" }
+
+  word@0.3.0:
+    resolution:
+      {
+        integrity: sha512-OELeY0Q61OXpdUfTp+oweA/vtLVg5VDOXh+3he3PNzLGG/y0oylSOC1xRVj0+l4vQ3tj/bB1HVHv1ocXkQceFA==,
+      }
+    engines: { node: ">=0.8" }
 
   workbox-background-sync@6.6.0:
     resolution:
@@ -11427,6 +11513,14 @@ packages:
       {
         integrity: sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ==,
       }
+
+  xlsx@0.18.5:
+    resolution:
+      {
+        integrity: sha512-dmg3LCjBPHZnQp5/F/+nnTa+miPJxUXB6vtk42YjBBKayDNagxGEeIdWApkYPOf3Z3pm3k62Knjzp7lMeTEtFQ==,
+      }
+    engines: { node: ">=0.8" }
+    hasBin: true
 
   xtend@4.0.2:
     resolution:
@@ -13003,7 +13097,7 @@ snapshots:
   "@next/swc-win32-x64-msvc@15.4.6":
     optional: true
 
-  "@next/third-parties@15.5.3(next@15.4.6(@babel/core@7.28.3)(@opentelemetry/api@1.9.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react@19.1.1)":
+  "@next/third-parties@15.5.6(next@15.4.6(@babel/core@7.28.3)(@opentelemetry/api@1.9.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react@19.1.1)":
     dependencies:
       next: 15.4.6(@babel/core@7.28.3)(@opentelemetry/api@1.9.0)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       react: 19.1.1
@@ -14749,6 +14843,8 @@ snapshots:
 
   acorn@8.15.0: {}
 
+  adler-32@1.3.1: {}
+
   ai@5.0.44(zod@3.25.76):
     dependencies:
       "@ai-sdk/gateway": 1.0.23(zod@3.25.76)
@@ -14905,6 +15001,8 @@ snapshots:
 
   at-least-node@1.0.0: {}
 
+  attr-accept@2.2.5: {}
+
   available-typed-arrays@1.0.7:
     dependencies:
       possible-typed-array-names: 1.1.0
@@ -15030,6 +15128,11 @@ snapshots:
 
   ccount@2.0.1: {}
 
+  cfb@1.2.2:
+    dependencies:
+      adler-32: 1.3.1
+      crc-32: 1.2.2
+
   chalk@4.1.2:
     dependencies:
       ansi-styles: 4.3.0
@@ -15104,6 +15207,8 @@ snapshots:
     transitivePeerDependencies:
       - "@types/react"
       - "@types/react-dom"
+
+  codepage@1.15.0: {}
 
   collapse-white-space@2.1.0: {}
 
@@ -15182,6 +15287,8 @@ snapshots:
       parse-json: 5.2.0
     optionalDependencies:
       typescript: 5.9.2
+
+  crc-32@1.2.2: {}
 
   crelt@1.0.6: {}
 
@@ -15999,6 +16106,10 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
+  file-selector@2.1.2:
+    dependencies:
+      tslib: 2.8.1
+
   filelist@1.0.4:
     dependencies:
       minimatch: 5.1.6
@@ -16043,6 +16154,8 @@ snapshots:
       is-callable: 1.2.7
 
   format@0.2.2: {}
+
+  frac@1.1.2: {}
 
   frimousse@0.2.0(react@19.1.1):
     dependencies:
@@ -17837,6 +17950,13 @@ snapshots:
       react: 19.1.1
       scheduler: 0.26.0
 
+  react-dropzone@14.3.8(react@19.1.1):
+    dependencies:
+      attr-accept: 2.2.5
+      file-selector: 2.1.2
+      prop-types: 15.8.1
+      react: 19.1.1
+
   react-easy-sort@1.6.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
     dependencies:
       array-move: 3.0.1
@@ -18406,6 +18526,10 @@ snapshots:
   sprintf-js@1.0.3: {}
 
   sqids@0.3.0: {}
+
+  ssf@0.11.2:
+    dependencies:
+      frac: 1.1.2
 
   stable-hash@0.0.5: {}
 
@@ -19008,7 +19132,11 @@ snapshots:
     dependencies:
       isexe: 3.1.1
 
+  wmf@1.0.2: {}
+
   word-wrap@1.2.5: {}
+
+  word@0.3.0: {}
 
   workbox-background-sync@6.6.0:
     dependencies:
@@ -19148,6 +19276,16 @@ snapshots:
       strip-ansi: 7.1.0
 
   wrappy@1.0.2: {}
+
+  xlsx@0.18.5:
+    dependencies:
+      adler-32: 1.3.1
+      cfb: 1.2.2
+      codepage: 1.15.0
+      crc-32: 1.2.2
+      ssf: 0.11.2
+      wmf: 1.0.2
+      word: 0.3.0
 
   xtend@4.0.2: {}
 

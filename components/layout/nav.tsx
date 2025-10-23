@@ -10,6 +10,7 @@ import {
   RiLayoutGridLine,
   RiLoginBoxLine,
   RiMenuLine,
+  RiUploadLine,
   RiUserAddLine,
 } from "@remixicon/react"
 import { User } from "better-auth"
@@ -158,6 +159,15 @@ export default async function Nav() {
                           >
                             <RiFolderLine className="text-muted-foreground h-4 w-4" />
                             <span>Directory</span>
+                          </Link>
+                        </SheetClose>
+                        <SheetClose asChild>
+                          <Link
+                            href="/import"
+                            className="hover:bg-muted/50 flex items-center gap-3 px-6 py-2.5 text-sm transition-colors"
+                          >
+                            <RiUploadLine className="text-muted-foreground h-4 w-4" />
+                            <span>Import Entities</span>
                           </Link>
                         </SheetClose>
                       </div>
