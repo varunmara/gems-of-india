@@ -2,6 +2,8 @@
 
 import Link from "next/link"
 
+import { RiAddLine, RiRobotLine } from "@remixicon/react"
+
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -96,11 +98,45 @@ export function NavMenu({ showDashboard = true }: NavMenuProps) {
         )}
 
         <NavigationMenuItem>
-          <NavigationMenuLink asChild>
-            <Link href="/submit" className={`${navigationMenuTriggerStyle()} h-9 px-3 text-sm`}>
-              Submit Gem
-            </Link>
-          </NavigationMenuLink>
+          <NavigationMenuTrigger className="h-9 cursor-pointer px-3 text-sm">
+            Submit Gem
+          </NavigationMenuTrigger>
+          <NavigationMenuContent>
+            <ul className="grid w-[280px] gap-1 p-2">
+              <li>
+                <NavigationMenuLink asChild>
+                  <Link
+                    href="/submit-choices"
+                    className="block rounded-md px-2 py-2 text-sm no-underline transition-colors outline-none select-none"
+                  >
+                    <div className="mb-1 flex items-center gap-2 font-medium">
+                      <RiAddLine className="h-4 w-4" />
+                      Submit Choices
+                    </div>
+                    <p className="text-muted-foreground text-xs leading-tight">
+                      Choose manual entry or auto-scraping
+                    </p>
+                  </Link>
+                </NavigationMenuLink>
+              </li>
+              <li>
+                <NavigationMenuLink asChild>
+                  <Link
+                    href="/scrape-entity"
+                    className="block rounded-md px-2 py-2 text-sm no-underline transition-colors outline-none select-none"
+                  >
+                    <div className="mb-1 flex items-center gap-2 font-medium">
+                      <RiRobotLine className="h-4 w-4" />
+                      Scrape from Website
+                    </div>
+                    <p className="text-muted-foreground text-xs leading-tight">
+                      Auto-extract from government websites
+                    </p>
+                  </Link>
+                </NavigationMenuLink>
+              </li>
+            </ul>
+          </NavigationMenuContent>
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>

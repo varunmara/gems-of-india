@@ -42,10 +42,11 @@ export function BottomNav() {
       type: "link" as const,
     },
     {
-      href: "/submit",
+      href: "/submit-choices",
       icon: RiAddCircleLine,
       label: "Submit",
-      isActive: pathname === "/submit",
+      isActive:
+        pathname === "/submit" || pathname === "/scrape-entity" || pathname === "/submit-choices",
       type: "link" as const,
     },
   ]
