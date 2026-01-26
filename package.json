@@ -20,7 +20,7 @@
     "docker:up": "docker-compose up -d",
     "docker:up:dev": "docker-compose up -d",
     "docker:up:prod": "docker-compose -f docker-compose.prod.yml up -d",
-    "lint": "next lint",
+    "lint": "eslint .",
     "prepare": "npx simple-git-hooks",
     "start": "next start"
   },
@@ -166,7 +166,6 @@
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
-    "@eslint/eslintrc": "^3.3.1",
     "@ianvs/prettier-plugin-sort-imports": "^4.4.1",
     "@types/minimatch": "^6.0.0",
     "@types/node": "^20.17.46",

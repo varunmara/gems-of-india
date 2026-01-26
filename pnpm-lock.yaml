@@ -305,9 +305,6 @@ importers:
       "@commitlint/config-conventional":
         specifier: ^19.8.1
         version: 19.8.1
-      "@eslint/eslintrc":
-        specifier: ^3.3.1
-        version: 3.3.1
       "@ianvs/prettier-plugin-sort-imports":
         specifier: ^4.4.1
         version: 4.6.1(prettier@3.6.2)

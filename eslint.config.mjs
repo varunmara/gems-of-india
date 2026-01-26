@@ -1,15 +1,15 @@
-import { dirname } from "path"
-import { fileURLToPath } from "url"
+import nextConfig from "eslint-config-next"
 
-import { FlatCompat } from "@eslint/eslintrc"
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-})
-
-const eslintConfig = [...compat.extends("next/core-web-vitals", "next/typescript")]
+const eslintConfig = [
+  ...nextConfig,
+  {
+    rules: {
+      // Disable new stricter rules from react-hooks 7.x to maintain compatibility
+      "react-hooks/set-state-in-effect": "off",
+      "react-hooks/purity": "off",
+      "react-hooks/static-components": "off",
+    },
+  },
+]
 
 export default eslintConfig
