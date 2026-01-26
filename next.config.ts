@@ -2,7 +2,6 @@ import type { NextConfig } from "next"
 
 import createMDX from "@next/mdx"
 import withPWA from "next-pwa"
-import remarkGfm from "remark-gfm"
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -93,9 +92,7 @@ const nextConfig: NextConfig = {
 }
 
 const withMDX = createMDX({
-  options: {
-    remarkPlugins: [remarkGfm],
-  },
+  // Note: remarkPlugins moved to mdx-components.tsx for Next.js 16 compatibility
 })
 
 // PWA configuration
