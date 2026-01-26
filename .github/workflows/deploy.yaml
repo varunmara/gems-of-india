@@ -1,132 +1,65 @@
-# This is a GitHub Actions workflow file that defines the continuous integration
-# and continuous deployment (CI/CD) process for a Next.js application.
-# It automates the process of building and deploying the application to a
-# DigitalOcean droplet when code is pushed to the 'main' branch.
+# This workflow deploys the Next.js application to Vercel.
+# It can be triggered manually from the Actions tab.
 
-name: Deploy Next.js App to DigitalOcean
+name: Deploy to Vercel
 
-# This section defines the trigger for the workflow.
-# The 'on: workflow_dispatch' allows this workflow to be triggered manually
-# from the Actions tab in the GitHub repository.
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: "Deployment environment"
+        required: true
+        default: "production"
+        type: choice
+        options:
+          - production
+          - preview
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
 jobs:
-  # The 'deploy' job encapsulates all the steps required to build and deploy the app.
   deploy:
-    environment: production
-    # This specifies that the job will run on the latest version of a GitHub-hosted Ubuntu runner.
     runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
 
-    # This section defines the sequence of steps that the job will execute.
     steps:
-      # Step 1: Check out the repository's code.
-      # This action downloads a copy of your repository onto the runner,
-      # making your source code available for the subsequent steps.
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # Step 2: Set up pnpm.
-      # This action installs pnpm and makes it available to the workflow.
       - name: Setup pnpm
-        uses: pnpm/action-setup@v3
+        uses: pnpm/action-setup@v4
         with:
-          version: 8 # Or your desired pnpm version
+          version: 10
 
-      # Step 3: Set up the Node.js environment.
-      # This action installs a specific version of Node.js on the runner.
-      # It's configured to use pnpm for caching, which is more efficient.
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: "22.x"
-          cache: "pnpm" # Cache dependencies managed by pnpm.
+          cache: "pnpm"
 
-      # Step 4: Install project dependencies with pnpm.
-      # This command reads the 'package.json' and 'pnpm-lock.yaml' files
-      # and installs all the necessary packages for your application.
       - name: Install dependencies
         run: pnpm install
 
-      # Step 5: Build the Next.js application.
-      # This command runs the 'build' script defined in your 'package.json'.
-      # It compiles your Next.js application for production.
-      # The 'env' section injects your production environment variables,
-      # which are stored securely as GitHub Secrets.
-      - name: Build application
-        run: pnpm run build
-        env:
-          NEXT_PUBLIC_UPLOADTHING_URL: ${{ secrets.NEXT_PUBLIC_UPLOADTHING_URL }}
-          NEXT_PUBLIC_TURNSTILE_SITE_KEY: ${{ secrets.NEXT_PUBLIC_TURNSTILE_SITE_KEY }}
-          # Better Auth required environment variables
-          BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
-          BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
-          # Google OAuth
-          NEXT_PUBLIC_GOOGLE_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_GOOGLE_CLIENT_ID }}
-          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
-          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
-          # Cloudflare Turnstile
-          TURNSTILE_SECRET_KEY: ${{ secrets.TURNSTILE_SECRET_KEY }}
-          # Google One Tap
-          NEXT_PUBLIC_ONE_TAP_CLIENT_ID: ${{ secrets.NEXT_PUBLIC_ONE_TAP_CLIENT_ID }}
-          # Other required env vars
-          NEXT_PUBLIC_URL: ${{ secrets.NEXT_PUBLIC_URL }}
+      - name: Install Vercel CLI
+        run: pnpm add -g vercel
 
-      # This redundant step has been removed for a cleaner workflow.
-      # The file syncing is handled by the next step.
+      - name: Pull Vercel Environment Information
+        run: vercel pull --yes --environment=${{ github.event.inputs.environment }} --token=${{ secrets.VERCEL_TOKEN }}
 
-      # Step 6: Prepare deployment package
-      # This step creates a clean directory with the exact file structure
-      # needed for production. This avoids rsync issues with multiple sources.
-      - name: Prepare deployment package
+      - name: Build Project
+        run: vercel build ${{ github.event.inputs.environment == 'production' && '--prod' || '' }} --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy to Vercel
+        id: deploy
         run: |
-          mkdir -p deploy
-          cp -R .next deploy/
-          cp -R public deploy/
-          cp -R drizzle deploy/
-          cp package.json deploy/
-          cp pnpm-lock.yaml deploy/
-          cp next.config.ts deploy/
-          cp middleware.ts deploy/
-          cp drizzle.config.ts deploy/
-        env:
-          # Mask sensitive information in logs
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          if [ "${{ github.event.inputs.environment }}" = "production" ]; then
+            url=$(vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }})
+          else
+            url=$(vercel deploy --prebuilt --token=${{ secrets.VERCEL_TOKEN }})
+          fi
+          echo "url=$url" >> $GITHUB_OUTPUT
 
-      # Step 7: Sync files to server
-      - name: Sync files to server
-        uses: easingthemes/ssh-deploy@main
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-          ARGS: "-rltgoDzqO --delete"
-          # Sync the entire contents of the prepared 'deploy' directory.
-          SOURCE: "deploy/"
-          REMOTE_HOST: ${{ secrets.DROPLET_HOST }}
-          REMOTE_USER: ${{ secrets.DROPLET_USERNAME }}
-          TARGET: ~/gems-of-india # The destination directory on your server.
-          EXCLUDE: ".env, .env.production"
-
-      # Step 7: Install production dependencies, run migrations, and restart the application with PM2.
-      # This step executes commands on your server after the files have been transferred.
-      - name: Run migrations and restart PM2 Application
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.DROPLET_HOST }}
-          username: ${{ secrets.DROPLET_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 22
-          script: |
-            # Navigate to your application's directory on the server.
-            cd ~/gems-of-india
-
-            # Install only production dependencies using pnpm.
-            # Suppress verbose output to avoid exposing sensitive information
-            pnpm install --prod --silent
-
-            # Run database migrations.
-            # This ensures the database schema is up to date before restarting the app.
-            pnpm db:migrate
-
-            # Restart the application using PM2.
-            # 'pm2 reload' provides a zero-downtime restart.
-            pm2 reload nextjs-app --silent
+      - name: Output Deployment URL
+        run: echo "Deployed to ${{ steps.deploy.outputs.url }}"
