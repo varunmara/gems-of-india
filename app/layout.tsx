@@ -128,8 +128,8 @@ export default function RootLayout({
           hrefLang="en-IN"
           href={process.env.NEXT_PUBLIC_URL || "https://gemsofindia.org"}
         />
-        {process.env.NODE_ENV === "production" && process.env.GA_MEASUREMENT_ID && (
-          <GoogleAnalytics gaId={process.env.GA_MEASUREMENT_ID} />
+        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID} />
         )}
       </head>
       <body
