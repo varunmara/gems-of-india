@@ -1,6 +1,11 @@
-# Gems of India - Database Schema
-
-This document describes the database schema for the Gems of India application. The database uses PostgreSQL with Drizzle ORM for type-safe database operations.
+<div align="center">
+  <a href="https://gemsofindia.org/">
+    <img src="https://gemsofindia.org/logo.png" alt="Gems of India" width="50" height="50">
+    <h1 style="margin-bottom: 0">gemsofindia.org</h1>
+   </a>
+    <h2 style="margin-top: 0">Database Schema</h2>
+    <p>This document describes the database schema for the Gems of India application. The database uses PostgreSQL with Drizzle ORM for type-safe database operations.</p>
+</div>
 
 ## Table of Contents
 

@@ -6,12 +6,12 @@
   
   [![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
   [![Discord](https://img.shields.io/discord/cVCYec2jFA?logo=discord)](https://discord.gg/cVCYec2jFA)
-  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/tuxthebot/gems-of-india/pulls)
-  [![GitHub stars](https://img.shields.io/github/stars/tuxthebot/gems-of-india?style=social)](https://github.com/tuxthebot/gems-of-india/stargazers)
-  [![GitHub forks](https://img.shields.io/github/forks/tuxthebot/gems-of-india?style=social)](https://github.com/tuxthebot/gems-of-india/network/members)
-  [![GitHub issues](https://img.shields.io/github/issues/tuxthebot/gems-of-india)](https://github.com/tuxthebot/gems-of-india/issues)
-  [![GitHub last commit](https://img.shields.io/github/last-commit/tuxthebot/gems-of-india)](https://github.com/tuxthebot/gems-of-india/commits/main)
-  [![GitHub contributors](https://img.shields.io/github/contributors/tuxthebot/gems-of-india)](https://github.com/tuxthebot/gems-of-india/graphs/contributors)
+  [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/varunmara/gems-of-india/pulls)
+  [![GitHub stars](https://img.shields.io/github/stars/varunmara/gems-of-india?style=social)](https://github.com/varunmara/gems-of-india/stargazers)
+  [![GitHub forks](https://img.shields.io/github/forks/varunmara/gems-of-india?style=social)](https://github.com/varunmara/gems-of-india/network/members)
+  [![GitHub issues](https://img.shields.io/github/issues/varunmara/gems-of-india)](https://github.com/varunmara/gems-of-india/issues)
+  [![GitHub last commit](https://img.shields.io/github/last-commit/varunmara/gems-of-india)](https://github.com/varunmara/gems-of-india/commits/main)
+  [![GitHub contributors](https://img.shields.io/github/contributors/varunmara/gems-of-india)](https://github.com/varunmara/gems-of-india/graphs/contributors)
 </div>
 
 ## 🌟 Summary
@@ -34,7 +34,7 @@ Take a look into the [docs](./docs) directory for more information.
 - [📖 Low Level System Design](./docs/LLD.md) - Low-level design specifications
 - [🗄️ Database Schema](./docs/SCHEMA.md) - Database structure and relationships
 - [🐳 Docker Setup Guide](./docs/DOCKER.md) - Docker configuration and usage
-- 🚀 [Deployment Guide](./docs/DEPLOYMENT.md) - Setup and deployment instructions
+- [🚀 Deployment Guide](./docs/DEPLOYMENT.md) - Setup and deployment instructions
 - [🛡️ Moderation System](./docs/MODERATION.md) - Moderation system overview
 
 ## ▶️ Quick Start

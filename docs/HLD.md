@@ -23,7 +23,7 @@
 
 ### Directory Structure with Key Files
 
-```
+```bash
 gems-of-india/
 ├── app/
 │   ├── (auth)/

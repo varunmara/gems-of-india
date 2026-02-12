@@ -1,4 +1,11 @@
-# Gems of India - Low Level Design
+<div align="center">
+  <a href="https://gemsofindia.org/">
+    <img src="https://gemsofindia.org/logo.png" alt="Gems of India" width="50" height="50">
+    <h1 style="margin-bottom: 0">gemsofindia.org</h1>
+   </a>
+    <h2 style="margin-top: 0">Low Level Design</h2>
+    <p>This document provides a LLD overview of the Gems-of-India application architecture.</p>
+</div>
 
 ## Table of Contents
 
@@ -15,7 +22,7 @@
 
 ## Project Structure
 
-```
+```bash
 gems-of-india/
 ├── app/                      # Next.js app directory (App Router)
 │   ├── (auth)/               # Authentication routes
