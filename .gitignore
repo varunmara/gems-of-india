@@ -54,3 +54,5 @@ public/workbox-*.js
 
 /public/sw.js
 /public/workbox-*.js
+
+/scripts/python/mps/mp_photos_sansad/*
